@@ -1,18 +1,9 @@
 import React from 'react';
-import { groq } from 'next-sanity';
-import { sanityClient } from '../../sanity/client';
 import BarGrid from '../../components/BarGrid';
 
-const query = groq`
-  *[_type == "bar"] {
-    name,
-    logo,
-    urlMaps
-  }
-`;
-
-const BaresPage = async () => {
-  const bars = await sanityClient.fetch(query);
+const BaresPage = () => {
+  // Replace with your own data source or API call
+  const bars: Array<{ name: string; logo?: string; urlMaps?: string }> = [];
 
   return (
     <div>

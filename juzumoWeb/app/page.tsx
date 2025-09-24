@@ -1,16 +1,4 @@
-import React from 'react';
-import Hero from '../components/Hero';
-
-const HomePage = async () => {
-  return (
-    <div>
-      <Hero
-        title="Welcome to Juzumo"
-        subtitle="Fresh juices and more."
-        ctaLabel="Order now"
-      />
-    </div>
-  );
-};
-
-export default HomePage;
+// app/page.tsx (temporary test)
+export default function Page() {
+  return <main className="p-16">Hello Juzumo</main>;
+}

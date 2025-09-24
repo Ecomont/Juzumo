@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar } from '../lib/types';
+import type { Bar } from '../lib/types';
 
 interface BarGridProps {
   bars: Bar[];

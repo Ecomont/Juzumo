@@ -1,5 +1,6 @@
 import React from 'react';
-import { Post } from '../lib/types';
+import type { Post } from '@/lib/types';
+
 import Link from 'next/link';
 
 interface BlogListProps {

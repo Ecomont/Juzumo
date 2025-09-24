@@ -1,53 +1,26 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { sanityClient } from '../../../sanity/client';
-import { Post } from '../../../lib/types';
-import PostContent from '../../../components/PostContent';
+type PageProps = {
+  params: { slug: string };
+};
 
-const PostPage = () => {
-  const router = useRouter();
-  const { slug } = router.query;
-  const [post, setPost] = useState<Post | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (slug) {
-      const fetchPost = async () => {
-        const query = `*[_type == "post" && slug.current == $slug][0]{
-          title,
-          slug,
-          date,
-          mainImage,
-          excerpt,
-          body
-        }`;
-        const postData = await sanityClient.fetch(query, { slug });
-        setPost(postData);
-        setLoading(false);
-      };
-
-      fetchPost();
-    }
-  }, [slug]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!post) {
-    return <div>Post not found.</div>;
-  }
+export default function PostPage({ params }: PageProps) {
+  const { slug } = params;
+  const title = decodeURIComponent(slug)
+    .split('-')
+    .map((s) => (s ? s[0].toUpperCase() + s.slice(1) : s))
+    .join(' ');
 
   return (
     <div>
-      <h1>{post.title}</h1>
-      <img src={post.mainImage.asset.url} alt={post.title} />
-      <PostContent content={post.body} />
-      <a href={`https://wa.me/?text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer">
+      <h1>{title}</h1>
+      {/* Content source removed (Sanity). Add your own content source here. */}
+      <p>Content is unavailable.</p>
+      <a
+        href={`https://wa.me/?text=${encodeURIComponent(title)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Contact us on WhatsApp
       </a>
     </div>
   );
-};
-
-export default PostPage;
+}
