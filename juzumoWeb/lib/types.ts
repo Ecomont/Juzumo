@@ -1,51 +1,36 @@
-// lib/types.ts
+export type Unit = 'kg' | 'ud' | 'g' | 'caja' | string;
 
-export type Unit = 'kg' | 'g' | 'unit' | 'pcs' | string;
-
-/** Fruits (supports your old Sanity shape and a local shape) */
-export type FruitSanity = {
+export type Fruit = {
   _id: string;
-  name: string;
-  price: number;
-  unit: Unit;
-  photo: { asset: { url: string } };
+  nombre: string;
+  precio: number;
+  unidad: Unit;
+  temporal?: boolean;   // seasonal
+  origen?: string;
+  ecologico?: boolean;
+  foto?: string;        // URL
+  actualizadoEl: string; // ISO (YYYY-MM-DD)
 };
 
-export type FruitLocal = {
-  _id: string;
-  name: string;
-  price: number;
-  unit: Unit;
-  imageUrl: string;
-};
-
-export type Fruit = FruitSanity | FruitLocal;
-
-export function getFruitImageUrl(f: Fruit): string {
-  return 'photo' in f ? f.photo.asset.url : f.imageUrl;
-}
-
-/** Bars */
 export type Bar = {
-  name: string;
-  urlMaps?: string;     // Google Maps or similar URL
-  logo?: string;       // optional image URL
+  nombre: string;
+  urlMaps: string;      // enlace a Google Maps
+  logo?: string;        // URL
 };
 
-/** Blog posts */
+export type Review = {
+  autor: string;
+  texto: string;
+  rating: number;       // 1..5
+  fecha: string;        // ISO
+  fuente?: 'google' | 'manual';
+};
+
 export type Post = {
   slug: string;
-  title: string;
-  date: string;        // ISO date string (e.g., "2025-09-24")
-  excerpt?: string;
-  coverImage?: string; // image URL
-  content?: string;    // optional full content/markdown
-};
-
-/** Reviews */
-export type Review = {
-  author: string;
-  text: string;
-  rating: number;      // 0..5
-  date: string;        // ISO date string
+  titulo: string;
+  fecha: string;        // ISO
+  extracto?: string;
+  portada?: string;     // URL
+  cuerpoMarkdown?: string; // opcional si luego metes MD
 };

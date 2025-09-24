@@ -9,12 +9,12 @@ interface PostContentProps {
 const PostContent: React.FC<PostContentProps> = ({ post }) => {
   return (
     <article>
-      <h1>{post.title}</h1>
-      <img src={post.coverImage} alt={post.title} />
+      <h1>{post.titulo}</h1>
+      
   
       <footer>
-        <p>Published on: {new Date(post.date).toLocaleDateString()}</p>
-        <a href={`https://wa.me/?text=${encodeURIComponent(post.title)}`}>Contact via WhatsApp</a>
+        <p>Published on: {new Date(post.fecha).toLocaleDateString()}</p>
+        <a href={`https://wa.me/?text=${encodeURIComponent(post.titulo)}`}>Contact via WhatsApp</a>
       </footer>
     </article>
   );
