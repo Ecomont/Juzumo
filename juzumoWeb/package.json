@@ -9,15 +9,16 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@sanity/client": "latest",
     "next": "latest",
+    "next-sanity": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "@sanity/client": "^2.24.0",
-    "sanity": "^2.24.0"
+    "sanity": "latest"
   },
   "devDependencies": {
-    "typescript": "^4.5.4",
     "eslint": "^7.32.0",
-    "eslint-config-next": "^12.0.7"
+    "eslint-config-next": "^12.0.7",
+    "typescript": "^4.5.4"
   }
 }
