@@ -1,23 +1,18 @@
-import { ReactNode } from 'react';
-import Head from 'next/head';
-import '../globals.css';
+import React from 'react';
+import '../styles/globals.css';
 
-export const metadata = {
-  title: 'Juzumo',
-  description: 'Your description here',
-  robots: 'index, follow',
+const Layout = ({ children }) => {
+  return (
+    <div>
+      <header>
+        <h1>My Sanity CMS App</h1>
+      </header>
+      <main>{children}</main>
+      <footer>
+        <p>&copy; {new Date().getFullYear()} My Sanity CMS App</p>
+      </footer>
+    </div>
+  );
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  return (
-    <html lang="es">
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="robots" content={metadata.robots} />
-      </Head>
-      <body>
-        {children}
-      </body>
-    </html>
-  );
-}
+export default Layout;

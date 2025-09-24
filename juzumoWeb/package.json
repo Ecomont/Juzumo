@@ -1,26 +1,23 @@
 {
-  "name": "my-next14-app",
+  "name": "next-sanity-app",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "next": "14.0.0",
-    "react": "18.0.0",
-    "react-dom": "18.0.0",
-    "tailwindcss": "^3.0.0",
-    "postcss": "^8.0.0",
-    "autoprefixer": "^10.0.0"
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "@sanity/client": "^2.24.0",
+    "sanity": "^2.24.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-next": "^14.0.0",
-    "prettier": "^2.0.0"
+    "typescript": "^4.5.4",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^12.0.7"
   }
 }

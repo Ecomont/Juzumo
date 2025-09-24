@@ -1,13 +1,15 @@
 module.exports = {
   reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    appDir: true,
-  },
   images: {
-    domains: ['example.com'], // Add your image domains here
+    domains: ['cdn.sanity.io'],
   },
-  env: {
-    CUSTOM_ENV_VARIABLE: process.env.CUSTOM_ENV_VARIABLE, // Example of using environment variables
+  async redirects() {
+    return [
+      {
+        source: '/old-path',
+        destination: '/new-path',
+        permanent: true,
+      },
+    ];
   },
 };
