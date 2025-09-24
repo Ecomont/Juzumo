@@ -1,8 +1,8 @@
+const path = require('path');
+
+/** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  images: {
-    domains: ['cdn.sanity.io'],
-  },
   async redirects() {
     return [
       {
@@ -12,4 +12,5 @@ module.exports = {
       },
     ];
   },
+  outputFileTracingRoot: path.join(__dirname, '..'),
 };

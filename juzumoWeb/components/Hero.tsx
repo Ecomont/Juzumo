@@ -1,15 +1,13 @@
 import React from 'react';
-import { SanityImageAsset } from '@sanity/image-url/lib/types/types';
-import { urlFor } from '../sanity/client';
 
 interface HeroProps {
   title: string;
   subtitle: string;
   ctaLabel: string;
-  videoPoster: SanityImageAsset;
+  imageUrl?: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ title, subtitle, ctaLabel, videoPoster }) => {
+const Hero: React.FC<HeroProps> = ({ title, subtitle, ctaLabel, imageUrl }) => {
   return (
     <section className="hero">
       <div className="hero-content">
@@ -17,9 +15,9 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, ctaLabel, videoPoster }) =
         <p>{subtitle}</p>
         <button>{ctaLabel}</button>
       </div>
-      {videoPoster && (
-        <div className="hero-video">
-          <img src={urlFor(videoPoster).url()} alt={title} />
+      {imageUrl && (
+        <div className="hero-image">
+          <img src={imageUrl} alt={title} />
         </div>
       )}
     </section>
