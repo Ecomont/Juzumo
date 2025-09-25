@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { FRUTAS } from '@/data/frutas';
 import { RESENAS } from '@/data/resenas';
 import { SITE } from '@/lib/site';
-import BarStrip from '@/components/BarStrip';
+
 import MapaAlbacete from '@/components/MapaAlbacete';
 
 export default function Page() {

@@ -8,7 +8,7 @@ export default function MapaAlbacete() {
       <div className="relative w-full overflow-hidden rounded-base shadow-card">
         {/* Ajusta el width/height a la proporción real de tu PNG */}
         <Image
-          src="/img/mapas/mapa.png"
+          src="/img/mapa.png"
           alt="Mapa de barrios de Albacete"
           width={1600}
           height={900}
