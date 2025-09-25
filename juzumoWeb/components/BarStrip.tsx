@@ -2,7 +2,7 @@
 import { BARES } from '@/data/bares';
 export default function BarStrip() {
   return (
-    <section className="py-8 bg-cream">
+    <section className="py-8 bg-transparent">
       <div className="overflow-hidden">
         <div className="flex gap-12 animate-[scroll_40s_linear_infinite] hover:[animation-play-state:paused]">
           {[...BARES, ...BARES].map((b, i) => (

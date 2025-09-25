@@ -1,5 +1,6 @@
-// tailwind.config.js
-module.exports = {
+// /home/h/Visual Studio Projects/Juzumo/juzumoWeb/tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
   theme: {
     extend: {
       colors: {
