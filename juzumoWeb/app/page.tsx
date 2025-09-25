@@ -34,22 +34,21 @@ export default function Page() {
 
       <MapaAlbacete />
 
-
-
       <SectionCard className="-mt-8">
         <div className="grid gap-6 md:grid-cols-3">
-      <SectionCard>
-        <h2 className="text-h2 mb-6">Fruta destacada</h2>
-        <FruitGrid fruits={FRUTAS.slice(0,6)} />
-        <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
-      </SectionCard>
+          <SectionCard>
+            <h2 className="text-h2 mb-6">Fruta destacada</h2>
+            <FruitGrid fruits={FRUTAS.slice(0,6)} />
+            <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
+          </SectionCard>
 
-      <SectionCard>
-        <h2 className="text-h2 mb-6">Reseñas</h2>
-        <ReviewList reviews={RESENAS.slice(0,3)} />
-        <div className="mt-6"><Link className="underline" href="/resenas">Ver todas</Link></div>
+          <SectionCard>
+            <h2 className="text-h2 mb-6">Reseñas</h2>
+            <ReviewList reviews={RESENAS.slice(0,3)} />
+            <div className="mt-6"><Link className="underline" href="/resenas">Ver todas</Link></div>
+          </SectionCard>
+        </div>
       </SectionCard>
-
 
       <section className="mx-auto max-w-5xl px-4 py-16 text-center">
         <h2 className="text-h2 mb-4">¿Empezamos hoy?</h2>

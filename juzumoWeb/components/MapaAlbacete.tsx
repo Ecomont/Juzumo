@@ -1,23 +1,48 @@
-import Image from 'next/image';
+// app/components/MapaAlbacete.tsx
+"use client";
+
+import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { LUGARES, mapsLink } from "@/data/lugares";
 
 export default function MapaAlbacete() {
+  const center: [number, number] = [38.994349, -1.858542]; // Plaza del Altozano aprox
+
+  const onPinClick = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12">
-      <h2 className="text-h2 mb-4">Área de servicio</h2>
-
-      <div className="relative w-full overflow-hidden rounded-base shadow-card">
-        {/* Ajusta el width/height a la proporción real de tu PNG */}
-        <Image
-          src="/img/mapa.png"
-          alt="Mapa de barrios de Albacete"
-          width={1600}
-          height={900}
-          className="w-full h-auto"
-          loading="lazy"
+    <div className="w-full h-[520px] rounded-2xl overflow-hidden">
+      <MapContainer
+        center={center}
+        zoom={13}
+        scrollWheelZoom
+        style={{ width: "100%", height: "100%" }}
+        preferCanvas
+      >
+        <TileLayer
+          // Tiles OSM libres
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; OpenStreetMap contributors'
         />
-      </div>
 
-      <p className="mt-2 text-sm text-gray-500">Mapa ilustrativo (versión temporal).</p>
-    </section>
+        {LUGARES.map((l) => (
+          <CircleMarker
+            key={l.id}
+            center={[l.lat, l.lng]}
+            radius={8}
+            pathOptions={{ color: "#e11d48", fillOpacity: 0.9 }} // rojo (tailwind rose-600)
+            eventHandlers={{
+              click: () => onPinClick(mapsLink(l)),
+            }}
+          >
+            <Tooltip direction="top" offset={[0, -6]} opacity={1} permanent={false}>
+              {l.nombre}
+            </Tooltip>
+          </CircleMarker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }
