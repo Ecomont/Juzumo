@@ -1,4 +1,6 @@
 // components/MapaAlbacete.tsx  (this is the one you import elsewhere)
+"use client";
+
 import dynamic from "next/dynamic";
 
 const MapaAlbacete = dynamic(() => import("./MapaAlbacete.client"), {
