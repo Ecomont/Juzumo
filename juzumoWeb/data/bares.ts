@@ -1,8 +1,31 @@
+// data/bares.ts
 import { Bar } from '@/lib/types';
+
 export const BARES: Bar[] = [
-  { nombre: 'Bar Central', urlMaps: 'https://maps.google.com/?q=Bar+Central', logo: '/img/bares/central.png' },
-  { nombre: 'Gran Muralla', urlMaps: 'https://maps.google.com/?q=La+Esquina', logo: '/img/bares/granMuralla.png' },
-  { nombre: 'El Rincón', urlMaps: 'https://maps.google.com/?q=El+Rincón', logo: '/img/bares/rincon.png' },
-  { nombre: 'Café Sol', urlMaps: 'https://maps.google.com/?q=Café+Sol', logo: '/img/bares/cafesol.png' },
-  // ...8–12 logos enlazando al map
+  { nombre: 'Iruña Bar Café',              urlMaps: 'https://maps.app.goo.gl/arW8hDztz2EzT5EL6',                     logo: '/img/bares/iruña.png' },
+  { nombre: 'Cafetería Cabo Suceso',       urlMaps: 'https://maps.app.goo.gl/if4bzaNgcoJJtZar5',                     logo: '/img/bares/caboSucesos.png' },
+  { nombre: 'Cervecería Boulevard',         urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Boulevard+Albacete', logo: '/img/bares/boulevard.png' },
+  { nombre: 'Cervecería Santa Marta',       urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Santa+Marta+Albacete', logo: '/img/bares/santaMarta.png' },
+  { nombre: 'Cervecería Santa Carla',       urlMaps: 'https://maps.app.goo.gl/?q=Santa+Carla+Cervecer%C3%ADa+Caf%C3%A9+Albacete', logo: '/img/bares/santaCarla.png' },
+  { nombre: 'Cafetería Tentaciones',        urlMaps: 'https://maps.app.goo.gl/?q=Tentaciones+Cafeter%C3%ADa+Albacete' /* sin logo */ },
+  { nombre: 'Tapería Triana',               urlMaps: 'https://maps.app.goo.gl/?q=Taper%C3%ADa+Triana+Albacete',       logo: '/img/bares/cafeTriana.png' },
+  { nombre: 'Café-Bar Estadio',             urlMaps: 'https://maps.app.goo.gl/?q=Caf%C3%A9+Bar+Estadio+Albacete',     logo: '/img/bares/cafeBarEstadio.png' },
+  { nombre: 'Freiduría',                    urlMaps: 'https://maps.app.goo.gl/?q=Freidur%C3%ADa+Albacete',            logo: '/img/bares/freiduria.png' },
+  { nombre: 'Café Bar Miriam',              urlMaps: 'https://maps.app.goo.gl/?q=Caf%C3%A9+Bar+Miriam+Albacete',      logo: '/img/bares/cafeMiriam.png' },
+  { nombre: 'Oleana Bar Tapería',           urlMaps: 'https://maps.app.goo.gl/?q=Oleana+Bar+Taper%C3%ADa+Albacete',   logo: '/img/bares/oleana.png' },
+  { nombre: 'Cafetería Cuba Café',          urlMaps: 'https://maps.app.goo.gl/?q=Cuba+Caf%C3%A9+Albacete',            logo: '/img/bares/cubaCafe.png' },
+  { nombre: 'Plantaciones de Origen',       urlMaps: 'https://maps.app.goo.gl/?q=Plantaciones+de+Origen+Albacete',    logo: '/img/bares/plantaciones.png' },
+  { nombre: 'Cafetería (C/ Ávila 10)',      urlMaps: 'https://maps.app.goo.gl/?q=Calle+%C3%81vila+10+Albacete' /* sin logo */ },
+  { nombre: 'Restaurante Los Molinos',      urlMaps: 'https://maps.app.goo.gl/?q=Restaurante+Los+Molinos+Albacete',   logo: '/img/bares/molinos.png' },
+  { nombre: 'Mesón Las Rejas',              urlMaps: 'https://maps.app.goo.gl/?q=Mes%C3%B3n+Las+Rejas+Albacete' /* sin logo */ },
+  { nombre: 'Restaurante Asiático Soho',    urlMaps: 'https://maps.app.goo.gl/?q=Restaurante+Asi%C3%A1tico+Soho+Albacete', logo: '/img/bares/soho.png' },
+  { nombre: 'Kyoto (Restaurante Asiático)', urlMaps: 'https://maps.app.goo.gl/?q=Restaurante+Asi%C3%A1tico+Kyoto+Albacete', logo: '/img/bares/kyoto.png' },
+  { nombre: 'Himawari Ramen',               urlMaps: 'https://maps.app.goo.gl/i5ZoHtDwkThfACcVA' /* sin logo */ },
+  { nombre: 'Casa de Oro',                  urlMaps: 'https://maps.app.goo.gl/?q=Casa+de+Oro+Albacete' /* sin logo */ },
+  { nombre: 'Tapería San Juan',             urlMaps: 'https://maps.app.goo.gl/47kc9qZDpU5UpA4p7',                     logo: '/img/bares/sanJuan.png' },
+  { nombre: 'Los Almendros',                urlMaps: 'https://maps.app.goo.gl/3JWjUBWkKhwkGxZA7',                     logo: '/img/bares/losAlmendros.png' },
+  { nombre: 'Pastelería Roldán',            urlMaps: 'https://maps.app.goo.gl/kz8kdTR9nDFDSamk9',                     logo: '/img/bares/pasteleriaRoldan.png' },
+  { nombre: 'Zebende',                      urlMaps: 'https://maps.app.goo.gl/ynB9sbGAGHRBQWTw7',                     logo: '/img/bares/zebende.png' },
+  { nombre: 'Cafetería Politécnica',        urlMaps: 'https://maps.app.goo.gl/x5D48yRMce8676Jt6',                     logo: '/img/bares/politecnica.png' },
+  { nombre: 'Gran Muralla', urlMaps: 'https://maps.app.goo.gl/?q=Gran+Muralla+Albacete', logo: '/img/bares/granMuralla.png' },
 ];

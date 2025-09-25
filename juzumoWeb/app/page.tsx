@@ -38,12 +38,6 @@ export default function Page() {
 
       <SectionCard className="-mt-8">
         <div className="grid gap-6 md:grid-cols-3">
-          <div><h3 className="text-h3">Fresco</h3><p>Seleccionamos a diario.</p></div>
-          <div><h3 className="text-h3">Transparente</h3><p>Precios por kg/ud visibles.</p></div>
-          <div><h3 className="text-h3">Rápido</h3><p>Ventanas de entrega claras.</p></div>
-        </div>
-      </SectionCard>
-
       <SectionCard>
         <h2 className="text-h2 mb-6">Fruta destacada</h2>
         <FruitGrid fruits={FRUTAS.slice(0,6)} />
