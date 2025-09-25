@@ -25,7 +25,13 @@ export default function Page() {
         caption="Vídeo sin audio mostrando fruta fresca y reparto."
       />
 
-      <BarStrip />
+      {/* Full-bleed wrapper to make the bar strip span the entire screen */}
+      <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+        <div className="mx-auto transform-gpu md:scale-105">
+          <BarStrip />
+        </div>
+      </div>
+
       <MapaAlbacete />
 
 
