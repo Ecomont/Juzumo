@@ -10,6 +10,24 @@ import { SITE } from '@/lib/site';
 export default function Page() {
   return (
     <main>
+      <div className="bg-brand-green-600 text-white p-4 rounded-base shadow-card text-h2">
+        Tailwind v4 + @theme OK
+      </div>
+
+      <div className="bg-[#2E7D32] text-white p-4 rounded-[12px] shadow-[0_6px_24px_rgba(0,0,0,.08)] text-[2rem]">
+        Tailwind compila (arbitrary values)
+      </div>
+
+      <div className="bg-[var(--color-brand-green-600)] text-white p-4">
+        Var token presente
+      </div>
+      <div className="bg-brand-green-600 text-white p-4 rounded-base shadow-card text-h2">
+        Utilidades de token generadas
+      </div>
+
+
+
+
       <Hero
         titulo="Fruta fresca para tu bar"
         subtitulo="Entrega rápida, precios claros y producto de temporada."

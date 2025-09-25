@@ -1,7 +1,10 @@
+@config "../tailwind.config.js";
+@source "../app/**/*.{js,jsx,ts,tsx}";
+@source "../components/**/*.{js,jsx,ts,tsx}";
 @import "tailwindcss";
 
-:root {
-  /* colors */
+/* ——— Tokens Tailwind v4 ——— */
+@theme {
   --color-brand-grafito: #393E40;
   --color-brand-orange-600: #F5A434;
   --color-brand-orange-400: #F7C23C;
@@ -15,43 +18,27 @@
   --color-white: #ffffff;
   --color-cream: #FFF8E1;
 
-  /* type scale */
-  --text-h1: 3rem;
-  --text-h1--line-height: 1.15;
-  --text-h2: 2.25rem;
-  --text-h2--line-height: 1.2;
-  --text-h3: 1.75rem;
-  --text-h3--line-height: 1.25;
-  --text-body: 1rem;
-  --text-body--line-height: 1.6;
-  --text-small: 0.875rem;
-  --text-small--line-height: 1.5;
+  --text-h1: 3rem;               --text-h1--line-height: 1.15;
+  --text-h2: 2.25rem;            --text-h2--line-height: 1.2;
+  --text-h3: 1.75rem;            --text-h3--line-height: 1.25;
+  --text-body: 1rem;             --text-body--line-height: 1.6;
+  --text-small: 0.875rem;        --text-small--line-height: 1.5;
 
-  /* spacing — note: this will make p-4 be 4px, etc. */
-  --spacing-4: 4px;
-  --spacing-8: 8px;
-  --spacing-12: 12px;
-  --spacing-16: 16px;
-  --spacing-20: 20px;
-  --spacing-24: 24px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-64: 64px;
+  --spacing-4: 4px;  --spacing-8: 8px;  --spacing-12: 12px;
+  --spacing-16: 16px; --spacing-20: 20px; --spacing-24: 24px;
+  --spacing-32: 32px; --spacing-40: 40px; --spacing-48: 48px; --spacing-64: 64px;
 
-  /* radii (rounded-base, rounded-pill) */
-  --radius-base: 12px;
-  --radius-pill: 9999px;
+  --radius-base: 12px; --radius-pill: 9999px;
 
-  /* shadows (shadow-card, shadow-hover) */
   --shadow-card: 0 6px 24px rgba(0,0,0,.08);
   --shadow-hover: 0 10px 28px rgba(0,0,0,.10);
 
-  /* transitions (ease-motion, duration-ui, duration-long) */
   --ease-motion: cubic-bezier(.22,.61,.36,1);
-  --duration-ui: 180ms;
-  --duration-long: 240ms;
+  --duration-ui: 180ms; --duration-long: 240ms;
 }
+
+
+
 
 html,
 body {
