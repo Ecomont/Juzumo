@@ -3,13 +3,14 @@ import { BARES } from '@/data/bares';
 
 export default function BarStrip() {
   return (
-    // Full-bleed: ocupa el ancho total de la pantalla, salga donde salga
-  <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-transparent">
+    // Ya NO hacemos full-bleed aquí. Eso lo gestiona la página.
+    <section className="w-full bg-transparent">
       <div className="w-full overflow-hidden">
         <div
           className="
-            flex items-stretch gap-12 h-64 sm:h-72 md:h-80 lg:h-96
-            min-w-[200%]                      /* track largo para el scroll infinito */
+            flex items-center gap-8
+            h-24 sm:h-28 md:h-32 lg:h-36          /* ↓ mucho más bajo que h-64…h-96 */
+            min-w-[200%]                          /* para scroll infinito */
             animate-[scroll_40s_linear_infinite]
             hover:[animation-play-state:paused]
             motion-reduce:animate-none
@@ -23,13 +24,13 @@ export default function BarStrip() {
               href={b.urlMaps}
               target="_blank" rel="noopener noreferrer"
               aria-label={`Logo del bar ${b.nombre}`} title={b.nombre}
-              className="flex h-full items-center"
+              className="flex h-full items-center px-2 shrink-0"  /* menos “aire” lateral */
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={b.logo ?? '/img/bares/default.svg'}
                 alt={`Logo del bar ${b.nombre}`}
-                className="h-full w-auto max-h-full object-contain opacity-90"
+                className="w-auto max-h-[90%] md:max-h-[92%] object-contain opacity-95"
                 loading="lazy" decoding="async"
               />
             </a>
