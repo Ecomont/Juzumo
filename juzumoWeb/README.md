@@ -40,10 +40,6 @@ npm run dev
 ```
 Visit `http://localhost:3000` to view the application.
 
-## Sanity Studio
-
-To access the Sanity Studio, navigate to `http://localhost:3000/studio`. You can create and edit content for the application here.
-
 ## Deployment
 
 For deployment, ensure that the environment variables are set in your hosting provider's settings. Use the following command to build the application:

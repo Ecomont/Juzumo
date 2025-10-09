@@ -7,7 +7,7 @@ export const BARES: Bar[] = [
   { nombre: 'Cervecería Boulevard',         urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Boulevard+Albacete', logo: '/img/bares/boulevard.png' },
   { nombre: 'Cervecería Santa Marta',       urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Santa+Marta+Albacete', logo: '/img/bares/santaMarta.png' },
   { nombre: 'Cervecería Santa Carla',       urlMaps: 'https://maps.app.goo.gl/?q=Santa+Carla+Cervecer%C3%ADa+Caf%C3%A9+Albacete', logo: '/img/bares/santaCarla.png' },
-  { nombre: 'Cafetería Tentaciones',        urlMaps: 'https://maps.app.goo.gl/?q=Tentaciones+Cafeter%C3%ADa+Albacete', logo: '/img/bares/tentaciones.png' },
+  { nombre: 'Cafetería Tentaciones',        urlMaps: 'https://maps.app.goo.gl/EiBXhgdiEtAQtvMw9', logo: '/img/bares/tentaciones.png' },
   { nombre: 'Tapería Triana',               urlMaps: 'https://maps.app.goo.gl/?q=Taper%C3%ADa+Triana+Albacete',       logo: '/img/bares/cafeTriana.png' },
   { nombre: 'Café-Bar Estadio',             urlMaps: 'https://maps.app.goo.gl/?q=Caf%C3%A9+Bar+Estadio+Albacete',     logo: '/img/bares/cafeBarEstadio.png' },
   { nombre: 'Freiduría',                    urlMaps: 'https://maps.app.goo.gl/?q=Freidur%C3%ADa+Albacete',            logo: '/img/bares/freiduria.png' },

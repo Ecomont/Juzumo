@@ -8,7 +8,7 @@ import { FRUTAS } from '@/data/frutas';
 import { RESENAS } from '@/data/resenas';
 import { SITE } from '@/lib/site';
 
-import MapaAlbacete from '@/components/MapaAlbacete';
+
 
 export default function Page() {
   return (
@@ -32,7 +32,7 @@ export default function Page() {
         </div>
       </div>
 
-      <MapaAlbacete />
+
 
       <SectionCard className="-mt-8">
         <div className="grid gap-6 md:grid-cols-3">

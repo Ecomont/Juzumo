@@ -1,15 +1,18 @@
-// components/MapaAlbacete.tsx  (this is the one you import elsewhere)
 "use client";
-
 import dynamic from "next/dynamic";
 
-const MapaAlbacete = dynamic(() => import("./MapaAlbacete.client"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[520px] rounded-2xl bg-neutral-200 flex items-center justify-center">
-      Cargando mapa…
-    </div>
-  ),
-});
+type Props = { size?: number };
+
+const MapaAlbacete = dynamic<Props>(
+  () => import("./MapaAlbacete.client").then(m => m.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[520px] rounded-2xl bg-neutral-200 flex items-center justify-center">
+        Cargando mapa…
+      </div>
+    ),
+  }
+);
 
 export default MapaAlbacete;
