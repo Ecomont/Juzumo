@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { FRUTAS } from '@/data/frutas';
 import { RESENAS } from '@/data/resenas';
 import { SITE } from '@/lib/site';
-
+import GoogleReviews from '@/components/GoogleReviews';
 
 
 export default function Page() {
@@ -44,11 +44,14 @@ export default function Page() {
 
           <SectionCard>
             <h2 className="text-h2 mb-6">Reseñas</h2>
-            <ReviewList reviews={RESENAS.slice(0,3)} />
-            <div className="mt-6"><Link className="underline" href="/resenas">Ver todas</Link></div>
+            <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
+            {/* El propio componente incluye botón “Ver en Google” */}
           </SectionCard>
+
+          {/* ...tu tercera columna si la hay... */}
         </div>
       </SectionCard>
+
 
       <section className="mx-auto max-w-5xl px-4 py-16 text-center">
         <h2 className="text-h2 mb-4">¿Empezamos hoy?</h2>
