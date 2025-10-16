@@ -4,7 +4,7 @@ import { Bar } from '@/lib/types';
 export const BARES: Bar[] = [
   { nombre: 'Iruña Bar Café',              urlMaps: 'https://maps.app.goo.gl/arW8hDztz2EzT5EL6',                     logo: '/img/bares/iruña.png' },
   { nombre: 'Cafetería Cabo Suceso',       urlMaps: 'https://maps.app.goo.gl/if4bzaNgcoJJtZar5',                     logo: '/img/bares/caboSucesos.png' },
-  { nombre: 'Cervecería Boulevard',         urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Boulevard+Albacete', logo: '/img/bares/boulevard.png' },
+  { nombre: 'Cervecería Boulevard',         urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Boulevard+Albacete', logo: '/img/bares/boulevard.svg' },
   { nombre: 'Cervecería Santa Marta',       urlMaps: 'https://maps.app.goo.gl/?q=Cervecer%C3%ADa+Santa+Marta+Albacete', logo: '/img/bares/santaMarta.png' },
   { nombre: 'Cervecería Santa Carla',       urlMaps: 'https://maps.app.goo.gl/?q=Santa+Carla+Cervecer%C3%ADa+Caf%C3%A9+Albacete', logo: '/img/bares/santaCarla.png' },
   { nombre: 'Cafetería Tentaciones',        urlMaps: 'https://maps.app.goo.gl/EiBXhgdiEtAQtvMw9', logo: '/img/bares/tentaciones.png' },
