@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { FRUTAS } from "@/data/frutas";
 import type { Fruit } from "@/lib/types";
 import { SITE } from "@/lib/site";
@@ -247,9 +248,75 @@ ${tplNames.join(", ")}`)?.trim();
 
       {/* LAYOUT: lista + dock */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-        {/* LISTA COMPACTA */}
+        {/* LISTA MÓVIL (cards) */}
+        <section className="md:hidden">
+          <ul className="space-y-3">
+            {productos.map((f) => {
+              const line = cart[f._id];
+              const qty = line?.qty ?? 0;
+              const sub = line ? line.precio * line.qty : 0;
+              return (
+                <li key={f._id} className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="shrink-0 overflow-hidden rounded-md">
+                      <Image
+                        src={f.foto || "/img/frutas/default.jpg"}
+                        alt={f.nombre}
+                        width={96}
+                        height={80}
+                        className="h-20 w-24 object-cover"
+                        sizes="(max-width: 768px) 96px, 120px"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <Link href={`/fruta/${f._id}`} className="line-clamp-1 font-medium text-gray-900 hover:underline">
+                        {f.nombre}
+                      </Link>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        {f.origen && <span>Origen: {f.origen}</span>}
+                        {isNew(f, 1) && <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700">Hoy</span>}
+                        {f.temporal && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-700">Temporada</span>}
+                      </div>
+                      <div className="mt-2 flex items-center justify-between">
+                        <div className="text-sm">
+                          <div className="font-medium">{formatEuro(f.precio)}</div>
+                          <div className="text-gray-500">{f.unidad}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => add(f, -1)}
+                            className="h-10 w-10 rounded border border-gray-300 leading-none hover:bg-gray-50 active:scale-95"
+                            aria-label={`Quitar ${f.nombre}`}
+                          >−</button>
+                          <input
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            className="h-10 w-16 rounded border border-gray-300 px-2 py-1 text-center"
+                            aria-label={`Cantidad de ${f.nombre}`}
+                            value={qty}
+                            onChange={(e) => setQty(f, Math.max(0, parseInt(e.target.value || "0", 10)))}
+                          />
+                          <button
+                            onClick={() => add(f, +1)}
+                            className="h-10 w-10 rounded border border-gray-300 leading-none hover:bg-gray-50 active:scale-95"
+                            aria-label={`Añadir ${f.nombre}`}
+                          >＋</button>
+                        </div>
+                      </div>
+                      <div className="mt-1 text-right text-sm font-medium">
+                        {sub ? formatEuro(sub) : "-"}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        {/* LISTA ESCRITORIO (tabla) */}
         <section className="md:col-span-8 lg:col-span-9">
-          <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          <div className="hidden overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm md:block">
             <table className="w-full text-sm">
               <thead className="sticky top-[64px] z-10 bg-gray-50 text-gray-600">
                 <tr>
@@ -268,8 +335,14 @@ ${tplNames.join(", ")}`)?.trim();
                     <tr key={f._id} className="border-t border-gray-100 hover:bg-gray-50/60">
                       <td className="px-3 py-3">
                         <div className="flex items-center gap-3">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={f.foto || "/img/frutas/default.jpg"} alt="" className="h-10 w-12 rounded object-cover" loading="lazy" />
+                          <Image
+                            src={f.foto || "/img/frutas/default.jpg"}
+                            alt={f.nombre}
+                            width={48}
+                            height={40}
+                            className="rounded object-cover"
+                            sizes="(max-width: 1024px) 48px, 48px"
+                          />
                           <div>
                             <Link href={`/fruta/${f._id}`} className="font-medium text-gray-900 hover:underline">{f.nombre}</Link>
                             <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500">
@@ -283,19 +356,19 @@ ${tplNames.join(", ")}`)?.trim();
                       <td className="px-3 py-3 text-right whitespace-nowrap">{formatEuro(f.precio)}</td>
                       <td className="px-3 py-3">{f.unidad}</td>
                       <td className="px-3 py-3">
-                        <div className="mx-auto flex max-w-[180px] items-center justify-center gap-2">
-                          <button onClick={() => add(f, -1)} className="h-8 w-8 rounded border border-gray-300 leading-none hover:bg-gray-50" aria-label={`Quitar ${f.nombre}`}>−</button>
+                        <div className="mx-auto flex max-w-[220px] items-center justify-center gap-2">
+                          <button onClick={() => add(f, -1)} className="h-10 w-10 rounded border border-gray-300 leading-none hover:bg-gray-50 active:scale-95 md:h-8 md:w-8" aria-label={`Quitar ${f.nombre}`}>−</button>
                           <input
                             inputMode="numeric"
                             pattern="[0-9]*"
-                            className="w-14 rounded border border-gray-300 px-2 py-1 text-center"
+                            className="h-10 w-16 rounded border border-gray-300 px-2 py-1 text-center md:h-8 md:w-14"
                             value={line?.qty ?? 0}
                             onChange={(e) => setQty(f, Math.max(0, parseInt(e.target.value || "0", 10)))}
                           />
-                          <button onClick={() => add(f, +1)} className="h-8 w-8 rounded border border-gray-300 leading-none hover:bg-gray-50" aria-label={`Añadir ${f.nombre}`}>＋</button>
+                          <button onClick={() => add(f, +1)} className="h-10 w-10 rounded border border-gray-300 leading-none hover:bg-gray-50 active:scale-95 md:h-8 md:w-8" aria-label={`Añadir ${f.nombre}`}>＋</button>
                           {/* atajos */}
-                          <button onClick={() => setQty(f, 5)} className="rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50">x5</button>
-                          <button onClick={() => setQty(f, 10)} className="rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50">x10</button>
+                          <button onClick={() => setQty(f, 5)} className="hidden rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 md:inline">x5</button>
+                          <button onClick={() => setQty(f, 10)} className="hidden rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 md:inline">x10</button>
                         </div>
                       </td>
                       <td className="px-3 py-3 text-right font-medium">{sub ? formatEuro(sub) : "-"}</td>
@@ -353,7 +426,7 @@ ${tplNames.join(", ")}`)?.trim();
       </div>
 
       {/* DOCK inferior para móvil (duplicado simple del CTA) */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white/95 p-3 backdrop-blur md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white/95 p-3 backdrop-blur md:hidden" style={{ paddingBottom: 'max(0px, env(safe-area-inset-bottom))' }}>
         <div className="mx-auto flex max-w-7xl items-center gap-3">
           <div className="flex-1 text-sm">
             <div className="font-medium">Total</div>

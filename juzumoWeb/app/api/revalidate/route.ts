@@ -1,50 +1,108 @@
+// app/api/google-reviews/route.ts
 import { NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
 
-// Ensure this route isn't cached
-export const dynamic = 'force-dynamic';
+// ===== Config por entorno =====
+const IS_PROD = process.env.NODE_ENV === 'production' && process.env.REVIEWS_MODE !== 'mock';
+// En producción cachea 24h; en dev/preview no cachees
+export const revalidate = IS_PROD ? 60 * 60 * 24 : 0;
+export const dynamic   = IS_PROD ? 'auto' : 'force-dynamic';
 
-function getPathsFromRequest(request: Request): string[] {
-  const url = new URL(request.url);
-  const params = url.searchParams;
+// Fallback en memoria por si recibimos 429 (no garantizado en serverless, pero ayuda)
+let lastOkPayload: any | null = null;
 
-  const repeated = params.getAll('path'); // e.g. ?path=/a&path=/b
-  const commaSeparated = (params.get('paths') || '') // e.g. ?paths=/a,/b
-    .split(',')
-    .map((p) => p.trim())
-    .filter(Boolean);
-
-  const merged = [...repeated, ...commaSeparated]
-    .map((p) => (p.startsWith('/') ? p : `/${p}`))
-    .map((p) => p.replace(/\/{2,}/g, '/')); // normalize double slashes
-
-  return Array.from(new Set(merged)); // unique
-}
-
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const paths = getPathsFromRequest(request);
-    if (paths.length === 0) {
+    // 1) Modo MOCK para no gastar durante desarrollo/preview
+    if (process.env.REVIEWS_MODE === 'mock') {
+      const mock = {
+        place: { name: 'JUZUMO', rating: 5, count: 13, mapsUri: '#', reviewsUri: '#' },
+        reviews: [
+          { author: 'Marta López', rating: 5, text: 'Fruta top 👌', publishTime: '2025-10-09T19:17:48Z' },
+          { author: 'Frank Lucas', rating: 5, text: 'Tomates espectaculares', publishTime: '2025-05-14T14:35:54Z' },
+        ],
+      };
+      return NextResponse.json(mock, { status: 200 });
+    }
+
+    // 2) LIVE: lee env vars (sin espacios y sin prefijo "places/")
+    let placeId = (process.env.GOOGLE_PLACE_ID ?? '').trim().replace(/^places\//, '');
+    const apiKey = (process.env.GOOGLE_MAPS_API_KEY ?? '').trim();
+
+    if (!placeId || !apiKey) {
       return NextResponse.json(
-        {
-          revalidated: false,
-          error: 'Provide one or more paths via ?path=/a or ?paths=/a,/b',
-        },
-        { status: 400 }
+        { error: 'Missing env', hasPlaceId: !!placeId, hasKey: !!apiKey },
+        { status: 500 }
       );
     }
 
-    for (const path of paths) {
-      revalidatePath(path);
+    const fieldMask = [
+      'displayName',
+      'googleMapsUri',
+      'rating',
+      'userRatingCount',
+      'reviewSummary.reviewsUri',
+      'reviews.authorAttribution.displayName',
+      'reviews.authorAttribution.uri',
+      'reviews.authorAttribution.photoUri',
+      'reviews.rating',
+      'reviews.text',
+      'reviews.publishTime',
+      'reviews.originalText',
+    ].join(',');
+
+    const url = `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=es&regionCode=ES`;
+
+    const resp = await fetch(url, {
+      headers: {
+        'X-Goog-Api-Key': apiKey,
+        'X-Goog-FieldMask': fieldMask,
+      },
+      // En prod dejará que Next use ISR (revalidate); en dev evita caché
+      cache: IS_PROD ? 'force-cache' : 'no-store',
+      next: IS_PROD ? { revalidate } : undefined,
+    });
+
+    if (!resp.ok) {
+      const details = await resp.text();
+
+      // 3) Si hemos llegado al límite (429), servimos el último OK o un payload vacío
+      if (resp.status === 429 && lastOkPayload) {
+        return NextResponse.json(lastOkPayload, { status: 200 });
+      }
+
+      console.error('Places error', resp.status, details);
+      return NextResponse.json(
+        { error: 'Places error', status: resp.status, details },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ revalidated: true, paths, now: Date.now() });
-  } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : 'Unknown error';
-    return NextResponse.json(
-      { revalidated: false, error: message },
-      { status: 500 }
-    );
+    const data = await resp.json();
+
+    const normalized = {
+      place: {
+        name: data?.displayName?.text ?? '',
+        rating: data?.rating ?? null,
+        count: data?.userRatingCount ?? 0,
+        mapsUri: data?.googleMapsUri ?? '',
+        reviewsUri: data?.reviewSummary?.reviewsUri ?? data?.googleMapsUri ?? '',
+      },
+      reviews: (data?.reviews ?? []).map((r: any) => ({
+        author: r?.authorAttribution?.displayName ?? 'Usuario de Google',
+        authorUrl: r?.authorAttribution?.uri ?? null,
+        authorPhoto: r?.authorAttribution?.photoUri ?? null,
+        rating: r?.rating ?? 0,
+        text: r?.text?.text ?? r?.originalText?.text ?? '',
+        publishTime: r?.publishTime ?? null,
+      })),
+    };
+
+    // Guarda último OK por si hay 429 después
+    lastOkPayload = normalized;
+
+    return NextResponse.json(normalized, { status: 200 });
+  } catch (e: any) {
+    console.error('Route crash', e);
+    return NextResponse.json({ error: 'Route crash', details: String(e) }, { status: 500 });
   }
 }
