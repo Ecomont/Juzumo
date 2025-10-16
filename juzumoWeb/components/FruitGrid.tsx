@@ -25,9 +25,9 @@ export default function FruitGrid({
   }
 
   return (
-    <div className={`grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 ${className}`} role="list">
-      {fruits.map(f => (
-        <FruitCard key={f._id} f={f} showBadges={showBadges} newWindow={newWindow} />
+    <div className={`grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 reveal stagger ${className}`} role="list">
+      {fruits.map((f, i) => (
+        <FruitCard key={f._id} f={f} index={i} showBadges={showBadges} newWindow={newWindow} />
       ))}
     </div>
   );
@@ -36,10 +36,12 @@ export default function FruitGrid({
 // ——— Card ———
 function FruitCard({
   f,
+  index,
   showBadges,
   newWindow,
 }: {
   f: Fruit;
+  index: number;
   showBadges: boolean;
   newWindow: boolean;
 }) {
@@ -47,7 +49,11 @@ function FruitCard({
   const href = `/fruta/${encodeURIComponent(f._id)}`;
 
   return (
-    <article role="listitem" className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md focus-within:shadow-md">
+    <article
+      role="listitem"
+      className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md focus-within:shadow-md hover-lift hover-tilt"
+      style={{ ['--i' as any]: index }}
+    >
       <div className="relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -61,14 +67,18 @@ function FruitCard({
         {showBadges && (
           <div className="pointer-events-none absolute left-2 top-2 flex flex-wrap gap-2">
             {nuevo && <Badge variant="accent">Nuevo</Badge>}
-            {f.temporal && <Badge>Temporada</Badge>}
-            {f.ecologico && <Badge icon>Eco</Badge>}
+            {f.temporal && <Badge className="chip pointer-events-auto">Temporada</Badge>}
+            {f.ecologico && (
+              <Badge className="chip pointer-events-auto" icon>
+                Eco
+              </Badge>
+            )}
           </div>
         )}
       </div>
 
       <div className="p-3">
-        <h3 className="line-clamp-1 text-sm font-medium text-gray-900">
+        <h3 className="line-clamp-2 text-sm font-medium text-gray-900 min-h-[2.6em]">
           <Link
             href={href}
             className="outline-none focus:ring-2 focus:ring-brand-green-500/40"
@@ -97,15 +107,17 @@ function Badge({
   children,
   variant = "muted",
   icon = false,
+  className = "",
 }: {
   children: React.ReactNode;
   variant?: "muted" | "accent";
   icon?: boolean;
+  className?: string;
 }) {
-  const base = "pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium";
+  const base = "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium";
   const styles = variant === "accent" ? "bg-brand-green-600 text-white" : "bg-white/95 text-gray-800 shadow-card";
   return (
-    <span className={`${base} ${styles}`}>
+    <span className={`${base} ${styles} ${className}`}>
       {icon && <span aria-hidden>🌿</span>}
       {children}
     </span>

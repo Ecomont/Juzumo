@@ -56,7 +56,7 @@ export default function BlogPage({
       <section className="relative mb-8 overflow-hidden rounded-2xl shadow-card">
         <div
           className="h-[220px] w-full bg-cover bg-center sm:h-[280px]"
-          style={{ backgroundImage: "url(/img/blog/hero.jpg)" }}
+          style={{ backgroundImage: "url(/img/hero-blog.png)" }}
           aria-label="Blog de fruta, verdura y hostelería"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />

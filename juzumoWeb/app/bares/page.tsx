@@ -197,7 +197,7 @@ ${tplNames.join(", ")}`)?.trim();
       <section className="relative mb-6 overflow-hidden rounded-2xl shadow-card">
         <div
           className="h-[200px] w-full bg-cover bg-center sm:h-[260px]"
-          style={{ backgroundImage: "url(/img/bares/hero.jpg)" }}
+          style={{ backgroundImage: "url(/img/hero-bares.png)" }}
           aria-label="Pedido rápido para bares"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />

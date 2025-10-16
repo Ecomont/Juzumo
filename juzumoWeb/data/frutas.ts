@@ -697,3 +697,359 @@ export const FRUTAS: Fruit[] = [
     actualizadoEl: '2025-10-12',
   },
 ].map((f) => ({ ...f, foto: '/img/frutas/manzana.jpg' }));
+
+
+// --- Enriquecimiento para el quiz de bienestar/vitaminas ---
+// Tipos (ajusta tu interfaz Fruit si quieres tipado estricto)
+type Beneficio = 'energia'|'defensas'|'digestion'|'recuperacion'|'suenio'|'hidratacion'|'piel';
+type Formato = 'pieza'|'zumo'|'smoothie'|'bowl';
+type Momento = 'desayuno'|'pre'|'post'|'noche';
+type Restriccion =
+  | 'evitar-reflujo'                // cítricos/ácidos pueden molestar
+  | 'interaccion-medicacion-pomelo' // pomelo puede interactuar con fármacos
+  | 'alergia-latex'                 // posible reacción cruzada (plátano/aguacate…)
+  | 'alto-indice-glucemico';        // moderar si se pide “bajo azúcar”
+
+type Nutrientes = {
+  vitC_mg?: number;        // aprox por 100g (cuando aplica)
+  potasio_mg?: number;     // aprox por 100g
+  fibra_g?: number;        // aprox por 100g
+  agua_pct?: number;       // %
+  carotenoides?: boolean;  // beta-caroteno/provitamina A relevante
+  polifenoles?: boolean;   // antocianinas/taninos relevantes
+  licopeno?: boolean;      // tomate
+  luteina_zeaxantina?: boolean; // hojas verdes
+  bromelina?: boolean;     // piña
+  papaina?: boolean;       // papaya
+  actinidina?: boolean;    // kiwi
+  melatonina?: boolean;    // cereza/guinda
+  grasas_saludables?: boolean; // aguacate
+};
+
+// Familia nutricional para asignar perfiles por defecto
+type Familia =
+  | 'citrico' | 'berry' | 'tropical-enzima' | 'tropical-dulce'
+  | 'melon' | 'pome' | 'uva' | 'platano' | 'granada' | 'stone'
+  | 'coco' | 'tomate' | 'pepino' | 'calabacin' | 'pimiento'
+  | 'allium' | 'raiz' | 'hoja' | 'crucifera' | 'seta' | 'hierba' | 'otros';
+
+// Perfiles por familia (beneficios “con base” y formatos recomendados)
+const FAMILIA_PROFILE: Record<Familia, {
+  beneficios: Beneficio[];
+  formatosBuenos: Formato[];
+  momentoBueno: Momento[];
+  restricciones?: Restriccion[];
+  nutriHint?: Partial<Nutrientes>;
+}> = {
+  citrico: {
+    beneficios: ['defensas','hidratacion','energia'],
+    formatosBuenos: ['pieza','zumo','smoothie'],
+    momentoBueno: ['desayuno','pre'],
+    restricciones: ['evitar-reflujo'],
+    nutriHint: { vitC_mg: 40, agua_pct: 86, polifenoles: true }
+  },
+  berry: {
+    beneficios: ['defensas','piel','recuperacion'],
+    formatosBuenos: ['pieza','bowl','smoothie'],
+    momentoBueno: ['desayuno','post','noche'],
+    nutriHint: { fibra_g: 2, polifenoles: true, vitC_mg: 40, agua_pct: 85 }
+  },
+  'tropical-enzima': {
+    beneficios: ['digestion','recuperacion','defensas'],
+    formatosBuenos: ['pieza','zumo','smoothie'],
+    momentoBueno: ['post','desayuno'],
+    restricciones: ['evitar-reflujo'],
+    nutriHint: { agua_pct: 86 }
+  },
+  'tropical-dulce': {
+    beneficios: ['piel','defensas','energia'],
+    formatosBuenos: ['pieza','smoothie','bowl'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { carotenoides: true, fibra_g: 2 }
+  },
+  melon: {
+    beneficios: ['hidratacion','piel'],
+    formatosBuenos: ['pieza','zumo'],
+    momentoBueno: ['pre','post','desayuno'],
+    nutriHint: { agua_pct: 90 }
+  },
+  pome: {
+    beneficios: ['digestion','energia','piel'],
+    formatosBuenos: ['pieza','zumo','bowl'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { fibra_g: 2, agua_pct: 84 }
+  },
+  uva: {
+    beneficios: ['recuperacion','energia','defensas'],
+    formatosBuenos: ['pieza','zumo','bowl'],
+    momentoBueno: ['post','desayuno'],
+    nutriHint: { polifenoles: true, agua_pct: 81 }
+  },
+  platano: {
+    beneficios: ['energia','recuperacion','suenio'],
+    formatosBuenos: ['pieza','smoothie','bowl'],
+    momentoBueno: ['pre','post','desayuno'],
+    restricciones: ['alergia-latex'],
+    nutriHint: { potasio_mg: 360, fibra_g: 2 }
+  },
+  granada: {
+    beneficios: ['defensas','piel','recuperacion'],
+    formatosBuenos: ['pieza','zumo','bowl'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { polifenoles: true, agua_pct: 78 }
+  },
+  stone: { // hueso: melocotón, albaricoque, ciruela, nectarina, caqui, chirimoya, cereza, higo
+    beneficios: ['piel','hidratacion','digestion'],
+    formatosBuenos: ['pieza','bowl','smoothie'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { carotenoides: true, fibra_g: 2 }
+  },
+  coco: {
+    beneficios: ['energia'],
+    formatosBuenos: ['pieza','bowl'],
+    momentoBueno: ['post','desayuno'],
+    nutriHint: { agua_pct: 47 }
+  },
+  tomate: {
+    beneficios: ['piel','defensas','hidratacion'],
+    formatosBuenos: ['pieza','bowl','zumo'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { licopeno: true, vitC_mg: 14, agua_pct: 94 }
+  },
+  pepino: {
+    beneficios: ['hidratacion','digestion'],
+    formatosBuenos: ['pieza','bowl','zumo'],
+    momentoBueno: ['pre','post','desayuno'],
+    nutriHint: { agua_pct: 95 }
+  },
+  calabacin: {
+    beneficios: ['hidratacion','digestion'],
+    formatosBuenos: ['bowl','smoothie'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { agua_pct: 94 }
+  },
+  pimiento: {
+    beneficios: ['defensas','piel'],
+    formatosBuenos: ['bowl','pieza'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { vitC_mg: 100 }
+  },
+  allium: {
+    beneficios: ['defensas','digestion'],
+    formatosBuenos: ['bowl'],
+    momentoBueno: ['desayuno','post'],
+  },
+  raiz: {
+    beneficios: ['energia','piel','digestion'],
+    formatosBuenos: ['bowl','smoothie'],
+    momentoBueno: ['desayuno','post'],
+    nutriHint: { carotenoides: true }
+  },
+  hoja: {
+    beneficios: ['piel','defensas','recuperacion'],
+    formatosBuenos: ['bowl','smoothie'],
+    momentoBueno: ['desayuno','noche'],
+    nutriHint: { luteina_zeaxantina: true, agua_pct: 93 }
+  },
+  crucifera: {
+    beneficios: ['defensas','digestion'],
+    formatosBuenos: ['bowl'],
+    momentoBueno: ['desayuno','post'],
+  },
+  seta: {
+    beneficios: ['recuperacion','defensas'],
+    formatosBuenos: ['bowl'],
+    momentoBueno: ['noche','post'],
+  },
+  hierba: {
+    beneficios: ['digestion','defensas'],
+    formatosBuenos: ['bowl','smoothie'],
+    momentoBueno: ['desayuno','noche'],
+  },
+  otros: {
+    beneficios: ['energia'],
+    formatosBuenos: ['pieza'],
+    momentoBueno: ['desayuno','post'],
+  }
+};
+
+// Asignación de cada _id a su familia
+const ITEM_FAMILIA: Record<string, Familia> = {
+  // Fruta
+  'manzana.jpg-golden': 'pome',
+  'naranja-valencia': 'citrico',
+  'mandarina-clementina': 'citrico',
+  'platano-canario': 'platano',
+  'fresa-huelva': 'berry',
+  'arandano': 'berry',
+  'frambuesa': 'berry',
+  'mora': 'berry',
+  'aguacate-hass': 'otros',
+  'mango': 'tropical-dulce',
+  'papaya': 'tropical-enzima',
+  'maracuya': 'tropical-dulce',
+  'pinya': 'tropical-enzima',         // piña
+  'melon-galia': 'melon',
+  'melon-cantalupo': 'melon',
+  'sandia-rayada': 'melon',
+  'pera-conferencia': 'pome',
+  'uva-blanca': 'uva',
+  'uva-negra': 'uva',
+  'kiwi-verde': 'berry',               // tratamos kiwi como berry funcional
+  'kiwi-amarillo': 'berry',
+  'limon': 'citrico',
+  'lima': 'citrico',
+  'pomelo-rosa': 'citrico',
+  'coco': 'coco',
+  'granada': 'granada',
+  'caqui': 'stone',
+  'chirimoya': 'stone',
+  'melocoton': 'stone',
+  'nectarina': 'stone',
+  'albaricoque': 'stone',
+  'ciruela-roja': 'stone',
+  'cereza': 'stone',
+  'higo': 'stone',
+  // Verdura / hierbas / setas
+  'tomate-ensalada': 'tomate',
+  'tomate-pera': 'tomate',
+  'tomate-cherry': 'tomate',
+  'pepino': 'pepino',
+  'calabacin': 'calabacin',
+  'pimiento-rojo': 'pimiento',
+  'pimiento-verde': 'pimiento',
+  'pimiento-amarillo': 'pimiento',
+  'cebolla-dulce': 'allium',
+  'cebolla-morada': 'allium',
+  'ajo-morado': 'allium',
+  'patata-agria': 'raiz',
+  'zanahoria': 'raiz',
+  'lechuga-romana': 'hoja',
+  'lechuga-iceberg': 'hoja',
+  'espinaca-bolsa': 'hoja',
+  'kale': 'hoja',
+  'brocoli': 'crucifera',
+  'coliflor': 'crucifera',
+  'seta-champinon': 'seta',
+  'seta-shiitake': 'seta',
+  'menta': 'hierba',
+  'albahaca': 'hierba',
+  'perejil': 'hierba',
+  'jengibre': 'raiz',
+  'nabo': 'raiz',
+  'boniato': 'raiz',
+  'calabaza-violon': 'raiz',
+  'apio': 'hoja',
+};
+
+// Overrides específicos (enzimas, melatonina, grasas saludables, pomelo, etc.)
+const ITEM_OVERRIDES: Partial<Record<string, {
+  beneficios?: Beneficio[];
+  restricciones?: Restriccion[];
+  nutriHint?: Partial<Nutrientes>;
+}>> = {
+  'pinya': { nutriHint: { bromelina: true, vitC_mg: 47 } },                 // piña
+  'papaya': { nutriHint: { papaina: true, carotenoides: true } },
+  'kiwi-verde': { nutriHint: { actinidina: true, vitC_mg: 90 }, beneficios: ['defensas','digestion','suenio'] },
+  'kiwi-amarillo': { nutriHint: { actinidina: true, vitC_mg: 110 }, beneficios: ['defensas','digestion'] },
+  'cereza': { nutriHint: { melatonina: true, polifenoles: true }, beneficios: ['suenio','recuperacion','defensas'] },
+  'pomelo-rosa': { restricciones: ['interaccion-medicacion-pomelo','evitar-reflujo'], nutriHint: { vitC_mg: 37 } },
+  'aguacate-hass': { nutriHint: { grasas_saludables: true, fibra_g: 7, potasio_mg: 480 }, beneficios: ['energia','piel','digestion'], restricciones: ['alergia-latex'] },
+  'zanahoria': { nutriHint: { carotenoides: true }, beneficios: ['piel','digestion','energia'] },
+  'boniato': { nutriHint: { carotenoides: true, fibra_g: 3 }, beneficios: ['energia','piel'] },
+  'calabaza-violon': { nutriHint: { carotenoides: true }, beneficios: ['piel','digestion'] },
+  'espinaca-bolsa': { nutriHint: { luteina_zeaxantina: true }, beneficios: ['piel','defensas','recuperacion'] },
+  'kale': { nutriHint: { luteina_zeaxantina: true }, beneficios: ['piel','defensas','recuperacion'] },
+  'brocoli': { beneficios: ['defensas','digestion'] },
+  'granada': { nutriHint: { polifenoles: true } },
+  'uva-negra': { nutriHint: { polifenoles: true } },
+  'uva-blanca': { nutriHint: { polifenoles: true } },
+  'tomate-ensalada': { nutriHint: { licopeno: true } },
+  'tomate-pera': { nutriHint: { licopeno: true } },
+  'tomate-cherry': { nutriHint: { licopeno: true } },
+  'jengibre': { beneficios: ['digestion','recuperacion'] },
+};
+
+// Temporada en España (aprox). Si falta, usamos todo el año o el flag `temporal`.
+const TEMPORADAS: Partial<Record<string, number[]>> = {
+  'naranja-valencia': [11,12,1,2,3,4,5],
+  'mandarina-clementina': [10,11,12,1,2],
+  'limon': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'lima': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'pomelo-rosa': [11,12,1,2,3,4],
+  'platano-canario': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'manzana.jpg-golden': [9,10,11,12,1,2,3,4],
+  'pera-conferencia': [8,9,10,11,12],
+  'uvas-blanca': [8,9,10], // (si tu _id exacto es 'uva-blanca', ignora esta)
+  'uva-blanca': [8,9,10],
+  'uva-negra': [8,9,10],
+  'granada': [9,10,11,12,1],
+  'caqui': [10,11,12],
+  'chirimoya': [10,11,12,1,2],
+  'mango': [9,10,11],
+  'papaya': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'maracuya': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'pinya': [1,2,3,4,5,6,7,8,9,10,11,12],
+  'melon-galia': [6,7,8,9],
+  'melon-cantalupo': [6,7,8,9],
+  'sandia-rayada': [6,7,8,9],
+  'fresa-huelva': [2,3,4,5,6],
+  'arandano': [5,6,7,8,9],
+  'frambuesa': [5,6,7,8,9,10],
+  'mora': [6,7,8,9],
+  'kiwi-verde': [10,11,12,1,2,3,4,5],
+  'kiwi-amarillo': [10,11,12,1,2,3,4],
+  'melocoton': [6,7,8,9],
+  'nectarina': [6,7,8,9],
+  'albaricoque': [5,6,7],
+  'ciruela-roja': [6,7,8,9],
+  'cereza': [5,6,7],
+  'higo': [8,9,10],
+  // Verdura: gran parte todo el año, dejamos defaults salvo puntas
+};
+
+// Deriva formatos y momentos por defecto si no hay override
+const DEFAULT_FORMATOS: Formato[] = ['pieza','bowl','smoothie','zumo'];
+const DEFAULT_MOMENTOS: Momento[] = ['desayuno','pre','post','noche'];
+
+// Enriquecedor principal
+type FruitQuiz = import('@/lib/types').Fruit & {
+  beneficios: Beneficio[];
+  formatosBuenos: Formato[];
+  momentoBueno: Momento[];
+  temporada: number[];
+  restricciones: Restriccion[];
+  nutrientes: Nutrientes;
+};
+
+function enriquecer(f: import('@/lib/types').Fruit): FruitQuiz {
+  const familia = ITEM_FAMILIA[f._id] ?? 'otros';
+  const base = FAMILIA_PROFILE[familia];
+  const override = ITEM_OVERRIDES[f._id] ?? {};
+
+  const beneficios = override.beneficios ?? base.beneficios;
+  const formatosBuenos = base.formatosBuenos ?? DEFAULT_FORMATOS;
+  const momentoBueno = base.momentoBueno ?? DEFAULT_MOMENTOS;
+
+  // ⬇️ TIPAR el extra evita que se convierta en string[]
+  const extraRestricciones: Restriccion[] =
+    f._id === 'platano-canario' ? ['alto-indice-glucemico'] : [];
+
+  const restricciones: Restriccion[] = [
+    ...(base.restricciones ?? []),
+    ...(override.restricciones ?? []),
+    ...extraRestricciones,
+  ];
+
+  const nutrientes: Nutrientes = { ...(base.nutriHint ?? {}), ...(override.nutriHint ?? {}) };
+
+  let temporada = TEMPORADAS[f._id];
+  if (!temporada) {
+    temporada = f.temporal ? [3,4,5,6,7,8,9,10] : [1,2,3,4,5,6,7,8,9,10,11,12];
+  }
+
+  return { ...f, beneficios, formatosBuenos, momentoBueno, temporada, restricciones, nutrientes };
+}
+
+// --- Exporta tu lista enriquecida para el quiz ---
+export const FRUTAS_QUIZ: FruitQuiz[] = FRUTAS.map(enriquecer);

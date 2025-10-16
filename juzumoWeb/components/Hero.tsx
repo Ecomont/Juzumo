@@ -23,7 +23,7 @@ const Hero: React.FC<HeroProps> = ({
   imageUrl,
 }) => {
   return (
-    <section className="relative isolate">
+    <section id="hero" className="relative isolate hero-overlay">
       {videoSrc ? (
         <video
           className="w-full h-[60vh] object-cover"
@@ -45,8 +45,7 @@ const Hero: React.FC<HeroProps> = ({
         />
       ) : null}
 
-      <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
-      <div className="absolute inset-0 flex items-center justify-center px-4">
+  <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
         <div className="max-w-3xl text-center text-white">
           <h1 className="text-h1">{titulo}</h1>
           <p className="mt-4 text-body">{subtitulo}</p>
@@ -54,7 +53,7 @@ const Hero: React.FC<HeroProps> = ({
             href={ctaHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-block rounded-base px-16 py-8 shadow-card bg-brand-orange-600 text-white"
+            className="mt-6 inline-block rounded-base px-16 py-8 shadow-card duration-ui ease-motion bg-brand-green-600 text-white hover:bg-brand-green-700"
           >
             {ctaLabel}
           </a>

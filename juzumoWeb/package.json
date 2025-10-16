@@ -26,12 +26,20 @@
     "eslint": "^7.32.0",
     "eslint-config-next": "^12.0.7",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3"
   },
   "postcss": {
     "plugins": {
       "@tailwindcss/postcss": {}
     }
-  }
+  },
+  "description": "This project is a Next.js application integrated with Sanity as a headless CMS. It allows users to manage content through an embedded Sanity Studio and displays various types of content on the front end.",
+  "main": "eslint.config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

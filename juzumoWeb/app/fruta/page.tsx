@@ -52,7 +52,7 @@ export default function Page() {
       <section className="relative mb-8 overflow-hidden rounded-2xl shadow-card">
         <div
           className="h-[260px] w-full bg-cover bg-center sm:h-[320px]"
-          style={{ backgroundImage: "url(/img/hero-poster.jpg)" }}
+          style={{ backgroundImage: "url(/img/hero-fruta.png)" }}
           aria-label="Fruta fresca de temporada"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />

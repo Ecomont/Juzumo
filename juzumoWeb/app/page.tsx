@@ -8,6 +8,8 @@ import { FRUTAS } from '@/data/frutas';
 import { RESENAS } from '@/data/resenas';
 import { SITE } from '@/lib/site';
 import GoogleReviews from '@/components/GoogleReviews';
+import QuizBienestar from '../components/QuizBienestar';
+
 
 
 export default function Page() {
@@ -35,17 +37,20 @@ export default function Page() {
 
 
       <SectionCard className="-mt-8">
-        <div className="grid gap-6 md:grid-cols-3">
-          <SectionCard>
+        <div className="grid gap-6 md:grid-cols-3 stagger">
+          <SectionCard style={{ ['--i' as any]: 0 }}>
             <h2 className="text-h2 mb-6">Fruta destacada</h2>
             <FruitGrid fruits={FRUTAS.slice(0,6)} />
             <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
           </SectionCard>
 
-          <SectionCard>
+          <SectionCard style={{ ['--i' as any]: 1 }}>
             <h2 className="text-h2 mb-6">Reseñas</h2>
             <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
             {/* El propio componente incluye botón “Ver en Google” */}
+            <div className="mt-8">
+              <QuizBienestar whatsapp={SITE.whatsapp} />
+            </div>
           </SectionCard>
 
           {/* ...tu tercera columna si la hay... */}
@@ -55,7 +60,7 @@ export default function Page() {
 
       <section className="mx-auto max-w-5xl px-4 py-16 text-center">
         <h2 className="text-h2 mb-4">¿Empezamos hoy?</h2>
-        <a className="inline-block rounded-base px-16 py-8 shadow-card duration-ui ease-motion bg-brand-green-600 text-white"
+        <a className="inline-block rounded-base px-16 py-8 shadow-card duration-ui ease-motion bg-brand-green-600 text-white hover:bg-brand-green-700"
            href={`https://wa.me/${SITE.whatsapp}`}>Contactar por WhatsApp</a>
       </section>
     </main>
