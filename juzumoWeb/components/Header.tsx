@@ -22,40 +22,40 @@ const Header = () => {
 
     const headerRef = useRef<HTMLElement | null>(null);
 
-    // Scroll behavior: hide on scroll down, show on scroll up; solid when not over hero
     useEffect(() => {
-        const el = headerRef.current;
-        if (!el) return;
+  const el = headerRef.current;
+  if (!el) return;
 
-        let lastY = window.scrollY;
-        const onScroll = () => {
-            const y = window.scrollY;
-            const goingDown = y > lastY + 4; // small hysteresis
-            const goingUp = y < lastY - 4;
-            lastY = y;
+  // 1) Ocultar al hacer scroll hacia abajo, mostrar al subir
+  let lastY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    const goingDown = y > lastY + 6;
+    const goingUp = y < lastY - 6;
+    lastY = y;
+    if (goingDown && y > 24) el.classList.add('nav--hidden');
+    else if (goingUp) el.classList.remove('nav--hidden');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-            // Toggle hidden on scroll down
-            if (goingDown && y > 24) {
-                el.classList.add('nav--hidden');
-            } else if (goingUp) {
-                el.classList.remove('nav--hidden');
-            }
+  // 2) Compactar nav cuando el sentinel sale del viewport
+  const sentinel = document.getElementById('nav-sentinel');
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      const compact = !entry.isIntersecting;
+      el.classList.toggle('nav--solid', compact);                // fondo/blurs del nav
+      document.documentElement.classList.toggle('nav-compact', compact); // cruza logos
+    },
+    { rootMargin: '-64px 0px 0px 0px' } // ajusta al alto real del header si no es 64px
+  );
+  if (sentinel) io.observe(sentinel);
 
-            // Solid after passing hero height (approx first viewport)
-            const hero = document.getElementById('hero');
-            const threshold = hero?.getBoundingClientRect().bottom ?? 0;
-            const isOverHero = threshold > 0; // bottom still visible in viewport
-            if (!isOverHero || y > (hero ? hero.offsetHeight - 64 : 200)) {
-                el.classList.add('nav--solid');
-            } else {
-                el.classList.remove('nav--solid');
-            }
-        };
+  return () => {
+    window.removeEventListener('scroll', onScroll);
+    io.disconnect();
+  };
+}, []);
 
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
 
     return (
         <header ref={headerRef} className="nav sticky top-0 z-50">
@@ -63,8 +63,14 @@ const Header = () => {
                 <div className="grid h-16 grid-cols-3 items-center">
                     {/* Left: brand */}
                     <div className="justify-self-start">
-                        <Link href="/" className="text-lg font-semibold text-gray-800">
-                            {SITE.nombre}
+                        <Link href="/" className="inline-flex items-center" aria-label={SITE.nombre}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src="/img/logo.svg"
+                                alt={SITE.nombre}
+                                className="logo-nav h-8 w-auto"
+                                height={32}
+                            />
                         </Link>
                     </div>
 

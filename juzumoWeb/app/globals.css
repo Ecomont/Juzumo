@@ -167,3 +167,37 @@
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ========= 11) Cruce logos ========= */
+@layer components{
+  /* Logo del hero (grande) */
+  .logo-hero{
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity var(--dur-ui) var(--ease-inout), transform var(--dur-ui) var(--ease-inout);
+    will-change: opacity, transform;
+  }
+  /* Logo del nav (pequeño) */
+  .logo-nav{
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity var(--dur-ui) var(--ease-inout), transform var(--dur-ui) var(--ease-inout);
+    will-change: opacity, transform;
+  }
+  /* Estado compacto: lo activa el Header via .nav-compact en <html> */
+  .nav-compact .logo-hero{
+    opacity: 0;
+    transform: scale(.96);
+    pointer-events: none;
+  }
+  .nav-compact .logo-nav{
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  /* Convierte /img/logo.svg a blanco sobre el hero (si no tienes versión blanca) */
+  .logo-white{
+    filter: invert(1) brightness(100%);
+  }
+}

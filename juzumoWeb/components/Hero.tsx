@@ -47,6 +47,15 @@ const Hero: React.FC<HeroProps> = ({
 
   <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
         <div className="max-w-3xl text-center text-white">
+          {/* 👇 Logo grande del hero (blanco mediante filtro). aria-hidden para no duplicar nombre de marca */}
+          <img
+            src="/img/logo.svg"
+            alt=""
+            aria-hidden="true"
+            className="logo-hero mx-auto mb-6 h-16 w-auto md:h-20"
+            height={80}
+          />
+
           <h1 className="text-h1">{titulo}</h1>
           <p className="mt-4 text-body">{subtitulo}</p>
           <a

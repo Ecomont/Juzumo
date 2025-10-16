@@ -18,6 +18,7 @@ export default function Page() {
 
 
       <Hero
+
         titulo="Fruta fresca para tu bar"
         subtitulo="Entrega rápida, precios claros y producto de temporada."
         ctaLabel="Pedir por WhatsApp"
@@ -27,35 +28,38 @@ export default function Page() {
         caption="Vídeo sin audio mostrando fruta fresca y reparto."
       />
 
-      {/* Full-bleed wrapper to make the bar strip span the entire screen */}
-      <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-        <div className="mx-auto transform-gpu md:scale-105">
+      <div id="nav-sentinel" className="h-px" />
+
+
+      {/* Full-bleed del BarStrip */}
+      <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen isolate z-0 mb-8 md:mb-12">
+        <div className="mx-auto transform-gpu md:scale-[1.01] relative z-0">
           <BarStrip />
         </div>
       </div>
 
+      {/* 👇 Sentinel: cuando desaparece del viewport, activamos el nav compacto */}
+      
 
+      {/* Cards stacked vertically */}
+      <section className="mx-auto max-w-6xl px-4 relative z-10 mt-0 md:mt-4 space-y-10 md:space-y-12">
+        <SectionCard className="p-6 md:p-8">
+          <h2 className="text-h2 mb-6">Fruta destacada</h2>
+          <FruitGrid fruits={FRUTAS.slice(0,6)} />
+          <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
+        </SectionCard>
 
-      <SectionCard className="-mt-8">
-        <div className="grid gap-6 md:grid-cols-3 stagger">
-          <SectionCard style={{ ['--i' as any]: 0 }}>
-            <h2 className="text-h2 mb-6">Fruta destacada</h2>
-            <FruitGrid fruits={FRUTAS.slice(0,6)} />
-            <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
-          </SectionCard>
+        <SectionCard className="p-6 md:p-8">
+          <h2 className="text-h2 mb-6">Reseñas</h2>
+          <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
+          {/* El propio componente incluye botón “Ver en Google” */}
+        </SectionCard>
 
-          <SectionCard style={{ ['--i' as any]: 1 }}>
-            <h2 className="text-h2 mb-6">Reseñas</h2>
-            <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
-            {/* El propio componente incluye botón “Ver en Google” */}
-            <div className="mt-8">
-              <QuizBienestar whatsapp={SITE.whatsapp} />
-            </div>
-          </SectionCard>
-
-          {/* ...tu tercera columna si la hay... */}
-        </div>
-      </SectionCard>
+        <SectionCard className="p-6 md:p-8">
+          <h2 className="text-h2 mb-6">Quiz bienestar</h2>
+          <QuizBienestar whatsapp={SITE.whatsapp} />
+        </SectionCard>
+      </section>
 
 
       <section className="mx-auto max-w-5xl px-4 py-16 text-center">
