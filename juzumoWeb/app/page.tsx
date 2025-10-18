@@ -48,17 +48,30 @@ export default function Page() {
           <FruitGrid fruits={FRUTAS.slice(0,6)} />
           <div className="mt-6"><Link className="underline" href="/fruta">Ver lista completa</Link></div>
         </SectionCard>
+      </section>
 
-        <SectionCard className="p-6 md:p-8">
-          <h2 className="text-h2 mb-6">Reseñas</h2>
-          <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
-          {/* El propio componente incluye botón “Ver en Google” */}
-        </SectionCard>
-
-        <SectionCard className="p-6 md:p-8">
+      {/* Split section: full-width, left image, right quiz */}
+      <section className="flex flex-col md:flex-row gap-0 items-stretch my-10 md:my-12">
+        <div className="md:w-1/2 w-full h-64 md:h-auto">
+          <img
+            src="/img/split50.jpeg"
+            alt="Fruta fresca y saludable"
+            className="object-cover w-full h-full min-h-[16rem] md:min-h-[500px]"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div className="md:w-1/2 w-full flex flex-col justify-center p-6 md:p-12 bg-cream">
           <h2 className="text-h2 mb-6">Quiz bienestar</h2>
           <QuizBienestar whatsapp={SITE.whatsapp} />
-        </SectionCard>
+        </div>
+      </section>
+
+      {/* Reseñas without card */}
+      <section className="mx-auto max-w-6xl px-4 relative z-10 my-10 md:my-12">
+        <h2 className="text-h2 mb-6">Reseñas</h2>
+        <GoogleReviews /> {/* ⬅️ usa las reseñas de Google */}
+        {/* El propio componente incluye botón "Ver en Google" */}
       </section>
 
 

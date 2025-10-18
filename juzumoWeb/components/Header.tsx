@@ -5,10 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SITE } from '@/lib/site';
 
-const NAV_LINKS = [
+const NAV_LINKS_LEFT = [
     { href: '/bares', label: 'Bares' },
     { href: '/fruta', label: 'Fruta' },
     { href: '/blog', label: 'Blog' },
+];
+
+const NAV_LINKS_RIGHT = [
     { href: '/contacto', label: 'Contacto' },
 ];
 
@@ -35,7 +38,16 @@ const Header = () => {
     lastY = y;
     if (goingDown && y > 24) el.classList.add('nav--hidden');
     else if (goingUp) el.classList.remove('nav--hidden');
+    
+    // Activar nav--solid cuando se baja del hero
+    if (y > 100) {
+      el.classList.add('nav--solid');
+    } else {
+      el.classList.remove('nav--solid');
+    }
   };
+  
+  onScroll(); // Ejecutar inmediatamente para estado inicial
   window.addEventListener('scroll', onScroll, { passive: true });
 
   // 2) Compactar nav cuando el sentinel sale del viewport
@@ -43,7 +55,6 @@ const Header = () => {
   const io = new IntersectionObserver(
     ([entry]) => {
       const compact = !entry.isIntersecting;
-      el.classList.toggle('nav--solid', compact);                // fondo/blurs del nav
       document.documentElement.classList.toggle('nav-compact', compact); // cruza logos
     },
     { rootMargin: '-64px 0px 0px 0px' } // ajusta al alto real del header si no es 64px
@@ -60,24 +71,11 @@ const Header = () => {
     return (
         <header ref={headerRef} className="nav sticky top-0 z-50">
             <div className="mx-auto max-w-6xl px-4">
-                <div className="grid h-16 grid-cols-3 items-center">
-                    {/* Left: brand */}
-                    <div className="justify-self-start">
-                        <Link href="/" className="inline-flex items-center" aria-label={SITE.nombre}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src="/img/logo.svg"
-                                alt={SITE.nombre}
-                                className="logo-nav h-8 w-auto"
-                                height={32}
-                            />
-                        </Link>
-                    </div>
-
-                    {/* Center: navbar */}
-                    <nav className="justify-self-center">
+                <div className="flex h-16 items-center justify-between gap-6">
+                    {/* Left: Bares, Fruta, Blog */}
+                    <nav className="flex-1">
                         <ul className="flex items-center gap-6 text-sm">
-                            {NAV_LINKS.map((link) => (
+                            {NAV_LINKS_LEFT.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
@@ -85,6 +83,7 @@ const Header = () => {
                                             'underline-slide transition-colors hover:text-gray-900 focus-visible:text-gray-900 ' +
                                             (isActive(link.href) ? 'font-semibold text-gray-900' : 'text-gray-700')
                                         }
+                                        style={{ textShadow: '0 1px 2px rgba(255,255,255,0.8)' }}
                                     >
                                         {link.label}
                                     </Link>
@@ -93,11 +92,42 @@ const Header = () => {
                         </ul>
                     </nav>
 
-                    {/* Right: WhatsApp CTA */}
-                    <div className="justify-self-end">
+                    {/* Center: Logo */}
+                    <div className="flex-shrink-0">
+                        <Link href="/" className="inline-flex items-center" aria-label={SITE.nombre}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src="/img/logo.svg"
+                                alt={SITE.nombre}
+                                className="logo-nav h-8 w-auto drop-shadow-md"
+                                height={32}
+                            />
+                        </Link>
+                    </div>
+
+                    {/* Right: Contacto + WhatsApp */}
+                    <div className="flex flex-1 items-center justify-end gap-6">
+                        <nav>
+                            <ul className="flex items-center gap-6 text-sm">
+                                {NAV_LINKS_RIGHT.map((link) => (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className={
+                                                'underline-slide transition-colors hover:text-gray-900 focus-visible:text-gray-900 ' +
+                                                (isActive(link.href) ? 'font-semibold text-gray-900' : 'text-gray-700')
+                                            }
+                                            style={{ textShadow: '0 1px 2px rgba(255,255,255,0.8)' }}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
                         <a
                             href={`https://wa.me/${SITE.whatsapp}`}
-                            className="rounded-md bg-brand-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm duration-ui ease-motion hover:bg-brand-green-700"
+                            className="rounded-md bg-brand-green-600 px-4 py-2 text-sm font-medium text-white shadow-md duration-ui ease-motion hover:bg-brand-green-700"
                         >
                             WhatsApp
                         </a>

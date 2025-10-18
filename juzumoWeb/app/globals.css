@@ -1,3 +1,14 @@
+/* Page fade transition for route changes */
+.page-fade-transition {
+  opacity: 1;
+  transition: opacity 0.5s cubic-bezier(.4,0,.2,1);
+}
+.page-fade-in {
+  opacity: 1;
+}
+.page-fade-out {
+  opacity: 0;
+}
 @import "tailwindcss";
 
 /* ========= 1) Design tokens (colores, tipografía, motion) ========= */
@@ -158,9 +169,16 @@
 
 /* ========= 9) Estados de navegación (clases para JS) ========= */
 @layer components{
-  .nav{ transition: transform var(--dur-ui) var(--ease-inout), background-color var(--dur-ui) var(--ease-inout); }
+  .nav{ 
+    transition: transform var(--dur-ui) var(--ease-inout), background-color var(--dur-ui) var(--ease-inout), box-shadow var(--dur-ui) var(--ease-inout);
+    background: transparent;
+  }
   .nav--hidden{ transform: translateY(-100%); }
-  .nav--solid{ background: rgba(255,255,255,.85); backdrop-filter: saturate(180%) blur(8px); }
+  .nav--solid{ 
+    background: rgba(255,255,255,.95); 
+    backdrop-filter: saturate(180%) blur(12px);
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
 }
 
 /* ========= 10) Accesibilidad / Reduced motion ========= */

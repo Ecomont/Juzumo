@@ -2,6 +2,7 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next';
 import React from 'react';
+import PageFadeTransition from '@/components/PageFadeTransition';
 import Header from '@/components/Header';
 import { SITE } from '@/lib/site';
 
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         {/* Barra de progreso de lectura fija arriba */}
         <div className="progress-scroll" aria-hidden="true" />
-        {children}
+        <PageFadeTransition key={typeof window !== 'undefined' ? window.location.pathname : undefined}>
+          {children}
+        </PageFadeTransition>
 
         {/* CTA flotante de WhatsApp */}
         <a

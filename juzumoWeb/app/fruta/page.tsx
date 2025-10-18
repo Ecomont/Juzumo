@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import FruitGrid from "@/components/FruitGrid";
 import { FRUTAS } from "@/data/frutas";
 import type { Fruit } from "@/lib/types";
@@ -14,6 +13,10 @@ function isNew(f: Fruit, days = 14) {
   return (now.getTime() - updated.getTime()) / 86400000 <= days;
 }
 
+function updatedTime(f: Fruit) {
+  return f.actualizadoEl ? new Date(`${f.actualizadoEl}T00:00:00`).getTime() : 0;
+}
+
 const ORIGENES = Array.from(new Set(FRUTAS.map(f => f.origen).filter(Boolean))).sort();
 
 export default function Page() {
@@ -22,6 +25,13 @@ export default function Page() {
   const [origen, setOrigen] = useState<string | "">("");
   const [q, setQ] = useState("");
   const [orden, setOrden] = useState<"novedades" | "precioAsc" | "precioDesc">("novedades");
+  
+  // Visibles por sección (mostrar más incremental)
+  const MAX_ITEMS = 10;
+  const [visibleNovedades, setVisibleNovedades] = useState(MAX_ITEMS);
+  const [visibleTemporada, setVisibleTemporada] = useState(MAX_ITEMS);
+  const [visibleEcologico, setVisibleEcologico] = useState(MAX_ITEMS);
+  const [visibleResto, setVisibleResto] = useState(MAX_ITEMS);
 
   const filtrada = useMemo(() => {
     let base = [...FRUTAS];
@@ -33,18 +43,47 @@ export default function Page() {
       base = base.filter(f => [f.nombre, f.origen].some(s => s?.toLowerCase().includes(t)));
     }
     switch (orden) {
-      case "precioAsc":  base.sort((a, b) => a.precio - b.precio); break;
-      case "precioDesc": base.sort((a, b) => b.precio - a.precio); break;
-      default:           base.sort((a, b) => Number(isNew(b)) - Number(isNew(a))); break;
+      case "precioAsc":
+        base.sort((a, b) => a.precio - b.precio);
+        break;
+      case "precioDesc":
+        base.sort((a, b) => b.precio - a.precio);
+        break;
+      default:
+        // Novedades primero y, a igualdad, más reciente primero
+        base.sort((a, b) => {
+          const byNew = Number(isNew(b)) - Number(isNew(a));
+          if (byNew !== 0) return byNew;
+          const byUpdated = updatedTime(b) - updatedTime(a);
+          if (byUpdated !== 0) return byUpdated;
+          // desempate por precio asc para estabilidad
+          return a.precio - b.precio;
+        });
+        break;
     }
     return base;
   }, [soloTemporada, soloEco, origen, q, orden]);
 
-  const fechaUltima = FRUTAS
-    .map(f => f.actualizadoEl)
-    .filter(Boolean)
-    .sort()
-    .reverse()[0] ?? "-";
+  // Agrupar productos por categoría
+  const novedades = useMemo(() => FRUTAS.filter(isNew).sort((a, b) => updatedTime(b) - updatedTime(a)), []);
+  const temporada = useMemo(() => filtrada.filter(f => f.temporal), [filtrada]);
+  const ecologico = useMemo(() => filtrada.filter(f => f.ecologico), [filtrada]);
+  const resto = useMemo(() => filtrada.filter(f => !f.temporal && !f.ecologico), [filtrada]);
+
+  // Cálculo de siguiente cantidad visible: +2 la primera vez; luego +10; reset si ya está completo
+  const nextVisible = (current: number, total: number) => {
+    if (current >= total) return MAX_ITEMS; // "Ver menos"
+    if (current === MAX_ITEMS) return Math.min(total, current + 2);
+    return Math.min(total, current + 10);
+  };
+
+  // Reiniciar listas visibles cuando cambian los filtros/búsqueda/orden
+  useEffect(() => {
+    setVisibleNovedades(MAX_ITEMS);
+    setVisibleTemporada(MAX_ITEMS);
+    setVisibleEcologico(MAX_ITEMS);
+    setVisibleResto(MAX_ITEMS);
+  }, [soloTemporada, soloEco, origen, q, orden]);
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-20">
@@ -68,18 +107,8 @@ export default function Page() {
         </div>
       </section>
 
-      {/* barra informativa */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 rounded-full bg-green-50 px-3 py-1 text-green-700">🌿 De la finca a tu mesa</span>
-          <span className="hidden sm:inline">·</span>
-          <span>Actualizado: {fechaUltima}</span>
-        </div>
-        <Link href="/resenas" className="underline hover:text-gray-900">Ver reseñas locales</Link>
-      </div>
-
       {/* FILTROS sticky */}
-      <section id="catalogo" className="sticky top-0 z-10 mb-6 -mx-4 border-b border-gray-100 bg-white/90 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      <section id="catalogo" className="sticky top-16 z-10 mb-8 -mx-4 border-b border-gray-100 bg-white/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/90 shadow-sm">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
           <div className="relative grow sm:grow-0 sm:basis-72">
             <input
@@ -116,26 +145,103 @@ export default function Page() {
         </div>
       </section>
 
-      {/* NOVEDADES */}
-      <section id="novedades" className="mb-8">
-        <h2 className="mb-3 text-xl font-semibold">Novedades</h2>
-        <p className="mb-4 text-sm text-gray-500">Productos actualizados en los últimos 14 días.</p>
-        <FruitGrid fruits={FRUTAS.filter(isNew).slice(0, 8)} />
-      </section>
+      {/* NOVEDADES (solo sin filtros activos y con orden = novedades) */}
+      {!q && !soloTemporada && !soloEco && !origen && orden === "novedades" && (
+        <section id="novedades" className="mb-12">
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-2">✨ Novedades</h2>
+            <p className="text-gray-600">Lo más reciente y fresco que tenemos para ti</p>
+          </div>
+          <FruitGrid fruits={novedades.slice(0, visibleNovedades)} className="gap-6" />
+          {novedades.length > MAX_ITEMS && (
+            <div className="text-center mt-6">
+              <button
+                onClick={() => setVisibleNovedades(nextVisible(visibleNovedades, novedades.length))}
+                className="rounded-full border border-gray-300 px-6 py-2 text-sm hover:bg-gray-50 transition-colors"
+              >
+                {visibleNovedades >= novedades.length ? '↑ Ver menos' : '↓ Ver más'}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
 
-      {/* CATÁLOGO */}
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Catálogo</h2>
-          <span className="text-sm text-gray-500">{filtrada.length} productos</span>
-        </div>
-        <FruitGrid fruits={filtrada} />
-        <div className="mt-10 text-center">
-          <a className="inline-block rounded-base bg-brand-green-600 px-6 py-3 text-white shadow-card transition hover:brightness-110" href="https://wa.me/">
-            ¿Tienes dudas? Escríbenos por WhatsApp
-          </a>
-        </div>
-      </section>
-    </main>
+      {/* CATÁLOGO POR CATEGORÍAS */}
+      {!q && !soloTemporada && !soloEco && !origen && orden === "novedades" ? (
+        // Vista por categorías cuando no hay filtros activos
+        <>
+          {temporada.length > 0 && (
+            <section className="mb-12">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">🍊 De Temporada</h2>
+                <p className="text-gray-600">Frutas y verduras en su mejor momento</p>
+              </div>
+                <FruitGrid fruits={temporada.slice(0, visibleTemporada)} className="gap-6" />
+                {temporada.length > MAX_ITEMS && (
+                  <div className="text-center mt-6">
+                    <button
+                      onClick={() => setVisibleTemporada(nextVisible(visibleTemporada, temporada.length))}
+                      className="rounded-full border border-gray-300 px-6 py-2 text-sm hover:bg-gray-50 transition-colors"
+                    >
+                      {visibleTemporada >= temporada.length ? '↑ Ver menos' : '↓ Ver más'}
+                    </button>
+                  </div>
+                )}
+            </section>
+          )}
+
+          {ecologico.length > 0 && (
+            <section className="mb-12">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">🌿 Ecológico</h2>
+                <p className="text-gray-600">Cultivado con respeto al medio ambiente</p>
+              </div>
+                <FruitGrid fruits={ecologico.slice(0, visibleEcologico)} className="gap-6" />
+                {ecologico.length > MAX_ITEMS && (
+                  <div className="text-center mt-6">
+                    <button
+                      onClick={() => setVisibleEcologico(nextVisible(visibleEcologico, ecologico.length))}
+                      className="rounded-full border border-gray-300 px-6 py-2 text-sm hover:bg-gray-50 transition-colors"
+                    >
+                      {visibleEcologico >= ecologico.length ? '↑ Ver menos' : '↓ Ver más'}
+                    </button>
+                  </div>
+                )}
+            </section>
+          )}
+
+          {resto.length > 0 && (
+            <section className="mb-12">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">🥝 Todo el año</h2>
+                <p className="text-gray-600">Disponibles siempre para ti</p>
+              </div>
+                <FruitGrid fruits={resto.slice(0, visibleResto)} className="gap-6" />
+                {resto.length > MAX_ITEMS && (
+                  <div className="text-center mt-6">
+                    <button
+                      onClick={() => setVisibleResto(nextVisible(visibleResto, resto.length))}
+                      className="rounded-full border border-gray-300 px-6 py-2 text-sm hover:bg-gray-50 transition-colors"
+                    >
+                      {visibleResto >= resto.length ? '↑ Ver menos' : '↓ Ver más'}
+                    </button>
+                  </div>
+                )}
+            </section>
+          )}
+        </>
+      ) : (
+        // Vista unificada cuando hay filtros activos
+        <section className="mb-12">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">Resultados</h2>
+              <p className="text-gray-600">{filtrada.length} productos encontrados</p>
+            </div>
+          </div>
+          <FruitGrid fruits={filtrada} className="gap-6" />
+        </section>
+      )}
+      </main>
   );
 }
